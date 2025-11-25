@@ -1,3 +1,7 @@
+#define INFO 0
+#define DEBUG 1
+#define ERROR 2
+
 class Logger {
     Logger *next;
     U0 (*log)(Logger *self, U8 *msg, U8 level);
@@ -13,13 +17,13 @@ class LoggerC : Logger {
 U0 logger_a_log(Logger *self, U8 *msg, U8 level) {
     U8 *level_msg;
     switch (level) {
-        case 0:
+        case INFO:
 	    level_msg = "INFO";
 	    break;
-        case 1:
+        case DEBUG:
 	    level_msg = "DEBUG";
 	    break;
-        case 2:
+        case ERROR:
 	    level_msg = "ERROR";
 	    break;
     }
@@ -29,13 +33,13 @@ U0 logger_a_log(Logger *self, U8 *msg, U8 level) {
 }
 
 U0 logger_b_log(Logger *self, U8 *msg, U8 level) {
-    if (level == 1) "im debugging %s\n", msg;
+    if (level == DEBUG) "im debugging %s\n", msg;
     if (self->next != NULL) self->next->log(self->next, msg, level);
     else return;
 }
 
 U0 logger_c_log(Logger *self, U8 *msg, U8 level) {
-    if (level == 2) "error %s\n", msg;
+    if (level == ERROR) "error %s\n", msg;
     if (self->next != NULL) self->next->log(self->next, msg, level);
     else return;
 }
@@ -54,7 +58,7 @@ U0 Main()
   loggerC.log = &logger_c_log;
   loggerC.next = &loggerB;
 
-  loggerC.log(&loggerC, "(((they))) glow in the dark", 0);
+  loggerC.log(&loggerC, "(((they))) glow in the dark", INFO);
 }
 Main;
 
